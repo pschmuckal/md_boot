@@ -24,8 +24,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define PRODUCT_ID          0xEE65
 #define DEVICE_VER          0x0100
 
-#define MANUFACTURER        "Massdrop Inc."
-#define PRODUCT             "Massdrop SHIFT Keyboard"
+//#define MANUFACTURER        "Massdrop Inc."
+//#define PRODUCT             "Massdrop SHIFT Keyboard"
+#define MANUFACTURER        "Drop Inc."
+#define PRODUCT             "Drop SHIFT Keyboard"
 #define SERIAL_NUM          "Unavailable"
 
 /* key matrix size */
@@ -104,7 +106,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 /* PCB M44 */
 #define DEBUG_PORT1_ENABLE          1
 #define DEBUG_PORT1_PORT            PB
-#define DEBUG_PORT1_PIN             31
+//#define DEBUG_PORT1_PIN             31
+#define DEBUG_PORT1_PIN             17
 /* PCB M45 */
 #define DEBUG_PORT2_ENABLE          1
 #define DEBUG_PORT2_PORT            PB
@@ -123,7 +126,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define DEBUG_BOOT_TRACING_PIN      23
 
 /* Debounce reduces chatter (unintended double-presses) - set 0 if debouncing is not needed */
-#define DEBOUNCING_DELAY 5
+#define DEBOUNCE 5
+
+// Required BOOT key hold time (in ms) for restarting to bootloader -PS081419
+#define BOOTKEY_HOLD_MS		2000
 
 /* Mechanical locking support. Use KC_LCAP, KC_LNUM or KC_LSCR instead in keymap */
 //#define LOCKING_SUPPORT_ENABLE
@@ -150,3 +156,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //#define NO_ACTION_ONESHOT
 //#define NO_ACTION_MACRO
 //#define NO_ACTION_FUNCTION
+
+#define RGB_MATRIX_KEYPRESSES
+#define RGB_MATRIX_LED_PROCESS_LIMIT 15
+#define RGB_MATRIX_LED_FLUSH_LIMIT 10
+#define RGB_MATRIX_EXTRA_TOG
+
+#include "config_led.h"

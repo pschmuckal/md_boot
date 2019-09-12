@@ -15,7 +15,6 @@
 
 extern issi3733_led_t *lede;
 extern issi3733_led_t led_map[];
-extern led_disp_t disp;
 
 enum ctrl_keycodes {
     L_BRI = SAFE_RANGE, //LED Brightness Increase
@@ -200,7 +199,6 @@ void matrix_init_user(void) {
 };
 
 // /tmk_core/protocol/arm_atsam/led_matrix.c: line 244
-uint8_t led_enabled;
 float led_animation_speed;
 uint8_t led_animation_direction;
 uint8_t led_animation_orientation;
@@ -236,8 +234,6 @@ void led_matrix_run(void)
     if (led_cur == 0) //Denotes start of new processing cycle in the case of chunked processing
     {
         led_cur = led_map;
-
-        disp.frame += 1;
 
         breathe_mult = 1;
 
@@ -313,7 +309,7 @@ void led_matrix_run(void)
                 }
 
                 float pomod;
-                pomod = (float)(disp.frame % (uint32_t)(1000.0f / led_animation_speed)) / 10.0f * led_animation_speed;
+                pomod = (float)(led_matrix_get_tick() % (uint32_t)(1000.0f / led_animation_speed)) / 10.0f * led_animation_speed;
 
                 //Add in any moving effects
                 if ((!led_animation_direction && f[fcur].ef & EF_SCR_R) || (led_animation_direction && (f[fcur].ef & EF_SCR_L)))
@@ -748,20 +744,17 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             return false;
         case L_T_ONF:
             if (record->event.pressed) {
-                led_enabled = !led_enabled;
-                I2C3733_Control_Set(led_enabled);
+                I2C3733_Control_Set(!I2C3733_Control_Get());
             }
             return false;
         case L_ON:
             if (record->event.pressed) {
-                led_enabled = 1;
-                I2C3733_Control_Set(led_enabled);
+                I2C3733_Control_Set(1);
             }
             return false;
         case L_OFF:
             if (record->event.pressed) {
-                led_enabled = 0;
-                I2C3733_Control_Set(led_enabled);
+                I2C3733_Control_Set(0);
             }
             return false;
         case L_T_BR:

@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //Define number of IS31FL3733 drivers being used (1...16)
 #define ISSI3733_DRIVER_COUNT 2
+#define DRIVER_LED_TOTAL ISSI3733_LED_COUNT
 
 //Hardware address of each driver (Refer to IS31FL3733 pdf "Table 1 Slave Address" and keyboard schematic)
 #define ISSI3773_DRIVER_ADDRESSES { 0xA0, 0xBE }
@@ -29,21 +30,24 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //Count of LED bodies
 #define ISSI3733_LED_COUNT 87
 
-//Default Global Current Register value (Default brightness 0 - 255)
-#define ISSI3733_GCR_DEFAULT 165
-
 #define LED_GCR_MAX                 165         //Max GCR value (0 - 255) WARNING: Raising this value may overload the LED drivers and USB bus
 #define LED_GCR_STEP                10          //GCR increment/decrement value
+
+#ifdef USE_MASSDROP_CONFIGURATOR
+#define ANIMATION_SPEED_STEP        1
+
+#define BREATHE_STEP                1
+#define BREATHE_MIN_STEP            0
+#define BREATHE_MAX_STEP            255
+#endif
+
+//Default Global Current Register value (Default brightness 0 - 255)
+#define ISSI3733_GCR_DEFAULT LED_GCR_MAX
 
 //Automatic power rollback and recovery
 #define V5_HIGH                     2494        //5V high level (After low power detect, point at which LEDs are allowed to use more power )
 #define V5_LOW                      2434        //5V low level (LED power rolled back to stay above this limit)
 #define V5_CAT                      2206        //5V catastrophic level (Host USB port potential to shut down)
-
-#define ANIMATION_SPEED_STEP        1
-
-#define BREATHE_MIN_STEP            0
-#define BREATHE_MAX_STEP            255
 
 //LED Mapping - More practically generated from a spreadsheet program
 //id: ID of the LED (Sync with PCB callouts)
@@ -129,21 +133,21 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  { .id = 70, .x = 8.532, .y = 3, .adr = { .drv = 1, .cs = 8, .swr = 5, .swg = 4, .swb = 6 }, .scan = 255 }, \
  { .id = 71, .x = 9.506, .y = 3, .adr = { .drv = 1, .cs = 5, .swr = 8, .swg = 7, .swb = 9 }, .scan = 254 }, \
  { .id = 72, .x = 10.48, .y = 3, .adr = { .drv = 1, .cs = 5, .swr = 5, .swg = 4, .swb = 6 }, .scan = 255 }, \
- { .id = 73, .x = 10.48, .y = 2.25, .adr = { .drv = 2, .cs = 12, .swr = 5, .swg = 4, .swb = 6 }, .scan = 255 }, \
- { .id = 74, .x = 10.48, .y = 1.5, .adr = { .drv = 2, .cs = 13, .swr = 8, .swg = 7, .swb = 9 }, .scan = 255 }, \
- { .id = 75, .x = 10.48, .y = 0.74, .adr = { .drv = 2, .cs = 14, .swr = 5, .swg = 4, .swb = 6 }, .scan = 255 }, \
- { .id = 76, .x = 9.506, .y = 0.74, .adr = { .drv = 2, .cs = 14, .swr = 2, .swg = 1, .swb = 3 }, .scan = 254 }, \
- { .id = 77, .x = 8.532, .y = 0.74, .adr = { .drv = 2, .cs = 16, .swr = 5, .swg = 4, .swb = 6 }, .scan = 255 }, \
- { .id = 78, .x = 7.558, .y = 0.74, .adr = { .drv = 1, .cs = 13, .swr = 2, .swg = 1, .swb = 3 }, .scan = 254 }, \
+ { .id = 73, .x = 0.74, .y = 0.74, .adr = { .drv = 2, .cs = 12, .swr = 5, .swg = 4, .swb = 6 }, .scan = 255 }, \
+ { .id = 74, .x = 1.714, .y = 0.74, .adr = { .drv = 2, .cs = 13, .swr = 8, .swg = 7, .swb = 9 }, .scan = 254 }, \
+ { .id = 75, .x = 2.688, .y = 0.74, .adr = { .drv = 2, .cs = 14, .swr = 5, .swg = 4, .swb = 6 }, .scan = 255 }, \
+ { .id = 76, .x = 3.662, .y = 0.74, .adr = { .drv = 2, .cs = 14, .swr = 2, .swg = 1, .swb = 3 }, .scan = 254 }, \
+ { .id = 77, .x = 4.636, .y = 0.74, .adr = { .drv = 2, .cs = 16, .swr = 5, .swg = 4, .swb = 6 }, .scan = 255 }, \
+ { .id = 78, .x = 5.61, .y = 0.74, .adr = { .drv = 1, .cs = 13, .swr = 2, .swg = 1, .swb = 3 }, .scan = 254 }, \
  { .id = 79, .x = 6.584, .y = 0.74, .adr = { .drv = 1, .cs = 13, .swr = 5, .swg = 4, .swb = 6 }, .scan = 255 }, \
- { .id = 80, .x = 5.61, .y = 0.74, .adr = { .drv = 1, .cs = 14, .swr = 5, .swg = 4, .swb = 6 }, .scan = 254 }, \
- { .id = 81, .x = 4.636, .y = 0.74, .adr = { .drv = 1, .cs = 16, .swr = 5, .swg = 4, .swb = 6 }, .scan = 255 }, \
- { .id = 82, .x = 3.662, .y = 0.74, .adr = { .drv = 1, .cs = 16, .swr = 8, .swg = 7, .swb = 9 }, .scan = 254 }, \
- { .id = 83, .x = 2.688, .y = 0.74, .adr = { .drv = 1, .cs = 2, .swr = 5, .swg = 4, .swb = 6 }, .scan = 255 }, \
- { .id = 84, .x = 1.714, .y = 0.74, .adr = { .drv = 2, .cs = 9, .swr = 11, .swg = 10, .swb = 12 }, .scan = 254 }, \
- { .id = 85, .x = 0.74, .y = 0.74, .adr = { .drv = 2, .cs = 12, .swr = 11, .swg = 10, .swb = 12 }, .scan = 255 }, \
- { .id = 86, .x = 0.74, .y = 1.5, .adr = { .drv = 1, .cs = 3, .swr = 8, .swg = 7, .swb = 9 }, .scan = 255 }, \
- { .id = 87, .x = 0.74, .y = 2.25, .adr = { .drv = 1, .cs = 3, .swr = 11, .swg = 10, .swb = 12 }, .scan = 255 }, \
+ { .id = 80, .x = 7.558, .y = 0.74, .adr = { .drv = 1, .cs = 14, .swr = 5, .swg = 4, .swb = 6 }, .scan = 254 }, \
+ { .id = 81, .x = 8.532, .y = 0.74, .adr = { .drv = 1, .cs = 16, .swr = 5, .swg = 4, .swb = 6 }, .scan = 255 }, \
+ { .id = 82, .x = 9.506, .y = 0.74, .adr = { .drv = 1, .cs = 16, .swr = 8, .swg = 7, .swb = 9 }, .scan = 254 }, \
+ { .id = 83, .x = 10.48, .y = 0.74, .adr = { .drv = 1, .cs = 2, .swr = 5, .swg = 4, .swb = 6 }, .scan = 255 }, \
+ { .id = 84, .x = 0.74, .y = 2.25, .adr = { .drv = 2, .cs = 9, .swr = 11, .swg = 10, .swb = 12 }, .scan = 254 }, \
+ { .id = 85, .x = 0.74, .y = 1.5, .adr = { .drv = 2, .cs = 12, .swr = 11, .swg = 10, .swb = 12 }, .scan = 254 }, \
+ { .id = 86, .x = 10.48, .y = 2.25, .adr = { .drv = 1, .cs = 3, .swr = 8, .swg = 7, .swb = 9 }, .scan = 254 }, \
+ { .id = 87, .x = 10.48, .y = 1.5, .adr = { .drv = 1, .cs = 3, .swr = 11, .swg = 10, .swb = 12 }, .scan = 254 }, \
 };
 
 #define USB_LED_INDICATOR_ENABLE    //Comment out to disable indicator functionality

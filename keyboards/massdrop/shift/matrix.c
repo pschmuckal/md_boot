@@ -95,14 +95,14 @@ void matrix_init(void)
 }
 
 uint64_t mdebouncing = 0;
+bool debouncing = false;
+
 uint8_t matrix_scan(void)
 {
-    uint8_t mchanged;
+    uint64_t timer;
     uint8_t row;
     uint8_t col;
     uint32_t scans[MCU_PORTS_USED]; //Array size must match number of unique MCU ports used for reads (PA, PB, PC, etc)
-
-    if (timer_read64() < mdebouncing) return 1; //mdebouncing == 0 when no debouncing active
 
     memset(mlatest, 0, MATRIX_ROWS * sizeof(matrix_row_t)); //Zero the result buffer
 
@@ -133,11 +133,7 @@ uint8_t matrix_scan(void)
         else if (PORT_IS_SR(col_ports[col]))                                    //Pin is on Shift Register
         {
             sr_kc_data.reg &= ~(1 << col_pins[col]);                            //Clear col output in RAM
-
-            //If the next port does not exist OR it is not the current port, output the shift register data
-            //Otherwise, the data will be output with next scan. This is to save time.
-            //if (col + 1 == MATRIX_COLS || col_ports[col] != col_ports[col + 1])
-                SR_KC_WriteData();                                              //Write shift register update
+            SR_KC_WriteData();                                              //Write shift register update
         }
 
         for (row = 0; row < MATRIX_ROWS; row++)
@@ -148,25 +144,26 @@ uint8_t matrix_scan(void)
         }
     }
 
-    mchanged = 0; //Default to no matrix change since last
+    timer = timer_read64();
 
     for (row = 0; row < MATRIX_ROWS; row++)
     {
-        if (mlast[row] != mlatest[row])
-            mchanged = 1;
+        if (mlast[row] != mlatest[row]) {
+            debouncing = true;
+            mdebouncing = timer + DEBOUNCE;
+        }
+
         mlast[row] = mlatest[row];
     }
 
-    if (!mchanged)
+    if (debouncing && timer >= mdebouncing)
     {
-        for (row = 0; row < MATRIX_ROWS; row++)
+        for (row = 0; row < MATRIX_ROWS; row++) {
             mdebounced[row] = mlatest[row];
+        }
+
         mdebouncing = 0;
-    }
-    else
-    {
-        //Begin or extend debounce on change
-        mdebouncing = timer_read64() + DEBOUNCING_DELAY;
+        debouncing = false;
     }
 
     matrix_scan_quantum();
