@@ -64,7 +64,7 @@ SOURCES += $(wildcard $(SOURCEDIR)/bootloader/common/*.c)
 SOURCES += $(wildcard $(SOURCEDIR)/usb/*.c)
 SOURCES += $(wildcard $(SOURCEDIR)/$(kbpath)/*.c)
 
-KB_SRC_X = $(SOURCEDIR)/$(kbpath)/matrix.c $(SOURCEDIR)/$(kbpath)/led_programs.c
+KB_SRC_X = $(SOURCEDIR)/$(kbpath)/matrix.c $(SOURCEDIR)/$(kbpath)/led_programs.c $(SOURCEDIR)/$(kbpath)/config_led.c
 
 SOURCESB = $(filter-out $(KB_SRC_X),$(SOURCES))
 
